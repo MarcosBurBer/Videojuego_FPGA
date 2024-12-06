@@ -1,3 +1,7 @@
+**Este Syncro_VGA no es el utilizado en el proyecto.**
+Esta creado con parametros ajustables para observar 
+mejor las caracteristicas de la pantalla.
+
 Este módulo genera las señales de sincronización necesarias para trabajar con una pantalla VGA, 
 manejando la sincronización horizontal y vertical, la visibilidad de los píxeles y el posicionamiento de filas y columnas. 
 
