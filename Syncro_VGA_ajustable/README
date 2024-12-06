@@ -1,0 +1,47 @@
+Este módulo genera las señales de sincronización necesarias para trabajar con una pantalla VGA, 
+manejando la sincronización horizontal y vertical, la visibilidad de los píxeles y el posicionamiento de filas y columnas. 
+
+**Características**
+Señales de sincronización horizontal y vertical: 
+Genera las señales hsync y vsync para controlar el proceso de escaneo VGA.
+
+Detección de visibilidad: 
+Determina si el píxel actual está dentro del área visible de la pantalla.
+
+Contadores de píxeles y líneas: 
+Rastrea la posición actual de los píxeles (columnas) y las líneas (filas) en la pantalla.
+Parámetros configurables: Diseñado para una resolución estándar VGA de 640x480 píxeles, 
+con parámetros ajustables para sincronización y porches.
+
+**Parámetros de Sincronización VGA**
+Sincronización Horizontal:
+Área Visible: 640 píxeles
+Porche Delantero: 16 píxeles
+Pulso de Sincronización: 96 píxeles
+Porche Trasero: 48 píxeles
+Total: 800 píxeles
+
+Sincronización Vertical:
+Área Visible: 480 líneas
+Porche Delantero: 10 líneas
+Pulso de Sincronización: 2 líneas
+Porche Trasero: 33 líneas
+Total: 525 líneas
+
+**Funcionamiento**
+Generación del Reloj de Píxeles:
+Se deriva una señal de reloj de píxeles del reloj principal para cronometrar el proceso de renderizado.
+
+Contador Horizontal (cont_pxl):
+Cuenta desde 0 hasta el total de píxeles horizontales (H_TOTAL = 800).
+Se reinicia al final de cada línea y activa el incremento del contador vertical.
+
+Contador Vertical (cont_line):
+Cuenta desde 0 hasta el total de líneas verticales (V_TOTAL = 525).
+Se reinicia al final de un cuadro para reiniciar el proceso de sincronización.
+
+Cálculo de Visibilidad:
+La señal visible está activa únicamente cuando los contadores cont_pxl y cont_line están dentro del área visible (H_DISPLAY y V_DISPLAY).
+
+Generación de Pulsos de Sincronización:
+Las señales hsync y vsync se generan durante sus respectivos períodos de sincronización, basándose en los parámetros configurados.
