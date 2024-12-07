@@ -18,7 +18,6 @@
 -- 
 ----------------------------------------------------------------------------------
 
----------------- HITO 1-------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -29,8 +28,8 @@ entity PINTA_Cuadriculas_16x16 is
           visible      : in std_logic;
           col          : in unsigned(10-1 downto 0);
           fila         : in unsigned(10-1 downto 0);
-          pac_fila     : in unsigned(5 downto 0);  -- Entrada para posici髇 de fila del cuadrado
-          pac_col      : in unsigned(5 downto 0);  -- Entrada para posici髇 de columna del cuadrado      
+          pac_fila     : in unsigned(5 downto 0);  -- Entrada para posici贸n de fila del cuadrado
+          pac_col      : in unsigned(5 downto 0);  -- Entrada para posici贸n de columna del cuadrado      
           fant_col     : in unsigned(5 downto 0);
           fant_fila    : in unsigned(5 downto 0);
           pos_x        : in unsigned (5 downto 0);
@@ -51,37 +50,37 @@ entity PINTA_Cuadriculas_16x16 is
 end PINTA_Cuadriculas_16x16;
 
 architecture Behavioral of PINTA_Cuadriculas_16x16 is
-    -- Se馻les internas
-    signal cuad_fil           : unsigned(5 downto 0);            -- Fila de la cuadr韈ula
-    signal cuad_col           : unsigned(5 downto 0);            -- Columna de la cuadr韈ula
+    -- Se帽ales internas
+    signal cuad_fil           : unsigned(5 downto 0);            -- Fila de la cuadr铆cula
+    signal cuad_col           : unsigned(5 downto 0);            -- Columna de la cuadr铆cula
     signal int_horizontal     : unsigned(3 downto 0);            -- Coordenada interna (horizontal)
     signal int_vertical       : unsigned(3 downto 0);            -- Coordenada interna (vertical)
     signal select_dato_memo   : unsigned(3 downto 0);            -- Selecciona el dato en memoria dependiendo de la posicion del sprite
     
-    signal direccion_pacman   : std_logic_vector(8-1 downto 0); -- Direcci髇 de memoria para Pac-Man
-    signal direccion_fantasma : std_logic_vector(8-1 downto 0); -- Direcci髇 de memoria para el fantasma
-    signal direccion_fantasma2 : std_logic_vector(8-1 downto 0); -- Direcci髇 de memoria para el fantasma
-    --signal direccion          : std_logic_vector(8-1 downto 0); -- Direcci髇 seleccionada
+    signal direccion_pacman   : std_logic_vector(8-1 downto 0); -- Direcci贸n de memoria para Pac-Man
+    signal direccion_fantasma : std_logic_vector(8-1 downto 0); -- Direcci贸n de memoria para el fantasma
+    signal direccion_fantasma2 : std_logic_vector(8-1 downto 0); -- Direcci贸n de memoria para el fantasma
+    --signal direccion          : std_logic_vector(8-1 downto 0); -- Direcci贸n seleccionada
     
-    signal sel_pixel_pac      : std_logic;                       -- Selecci髇 de p韝el de Pac-Man
-    signal sel_pixel_fant     : std_logic;                       -- Selecci髇 de p韝el del fantasma
-    signal sel_pixel_fant2     : std_logic;                       -- Selecci髇 de p韝el del fantasma2
-    signal sel_pixel_pista   : std_logic;                        -- Selecci髇 de p韝el de la pista
+    signal sel_pixel_pac      : std_logic;                       -- Selecci贸n de p铆xel de Pac-Man
+    signal sel_pixel_fant     : std_logic;                       -- Selecci贸n de p铆xel del fantasma
+    signal sel_pixel_fant2     : std_logic;                       -- Selecci贸n de p铆xel del fantasma2
+    signal sel_pixel_pista   : std_logic;                        -- Selecci贸n de p铆xel de la pista
     
     signal verde_P, azul_P :std_logic;
     signal sel_color   : std_logic_vector(1 downto 0);
     
 begin
-    -- Calcular cuadr韈ula y posici髇 interna
-    cuad_fil       <= fila(9 downto 4);     -- Bits m醩 significativos para obtener la fila
-    cuad_col       <= col(9 downto 4);      -- Bits m醩 significativos para obtener la columna
+    -- Calcular cuadr铆cula y posici贸n interna
+    cuad_fil       <= fila(9 downto 4);     -- Bits m谩s significativos para obtener la fila
+    cuad_col       <= col(9 downto 4);      -- Bits m谩s significativos para obtener la columna
     int_horizontal <= fila(3 downto 0);     -- Bits menos significativos: coordenada interna horizontal
     int_vertical   <= col(3 downto 0);      -- Bits menos significativos: coordenada interna vertical
 
     -- Proceso para generar las direcciones de memoria de las imagenes
     P_direccion_memoria: Process (fila, col, cuad_fil, cuad_col,direccion)
     begin
-        -- Direcci髇 de Pac-Man
+        -- Direcci贸n de Pac-Man
         if cuad_fil = pac_fila and cuad_col = pac_col then
         case direccion is
           when "0101" => -- Arriba (sin cambio)
@@ -113,30 +112,30 @@ begin
             select_dato_memo <= int_horizontal;
         end case;
         else
-            direccion_pacman <= (others => '0'); -- No v醠ida si no estamos en Pac-Man
+            direccion_pacman <= (others => '0'); -- No v谩lida si no estamos en Pac-Man
         end if;
 
-        -- Direcci髇 del fantasma
+        -- Direcci贸n del fantasma
         if cuad_fil = fant_fila and cuad_col = fant_col then
             direccion_fantasma <= "0100" & std_logic_vector(fila(3 downto 0)); -- Bits menos significativos
         else
-            direccion_fantasma <= (others => '0'); -- No v醠ida si no estamos en el fantasma
+            direccion_fantasma <= (others => '0'); -- No v谩lida si no estamos en el fantasma
         end if;
    
-        -- Direcci髇 del fantasma
+        -- Direcci贸n del fantasma
         if cuad_fil = pos_x and cuad_col = pos_y then
             direccion_fantasma2 <= "0101" & std_logic_vector(fila(3 downto 0)); -- Bits menos significativos
         else
-            direccion_fantasma2 <= (others => '0'); -- No v醠ida si no estamos en el fantasma
+            direccion_fantasma2 <= (others => '0'); -- No v谩lida si no estamos en el fantasma
         end if;
     end process;
 
-    -- Selecci髇 de la direcci髇 en funci髇 del personaje
+    -- Selecci贸n de la direcci贸n en funci贸n del personaje
     addr <= direccion_pacman when cuad_fil = pac_fila and cuad_col = pac_col else
             direccion_fantasma when cuad_fil = fant_fila and cuad_col = fant_col else
             direccion_fantasma2; 
 
-    -- Se馻les para determinar si un p韝el pertenece a Pac-Man o al fantasma
+    -- Se帽ales para determinar si un p铆xel pertenece a Pac-Man o al fantasma
     sel_pixel_pac  <= '1' when dato_pac(to_integer(select_dato_memo))= '0' and cuad_fil = pac_fila and cuad_col = pac_col else '0';
     sel_pixel_fant <= '1' when dato_fant(to_integer(int_vertical)) = '0' and cuad_fil = fant_fila and cuad_col = fant_col else '0';
     sel_pixel_fant2 <= '1' when dato_fant2(to_integer(int_vertical)) = '0' and cuad_fil = pos_x and cuad_col = pos_y else '0';
@@ -149,8 +148,8 @@ begin
     sel_color <= verde_P & azul_P;
 
 
-    -- Selecci髇 de colores seg鷑 prioridades
-    -- L骻ica para determinar los colores
+    -- Selecci贸n de colores seg煤n prioridades
+    -- L贸gica para determinar los colores
     Process (visible, col, fila)
     begin
         -- Inicializamos los valores en negro
@@ -159,7 +158,7 @@ begin
         azul  <= (others => '0');
      
         if visible = '1' then
-           -- Condici髇 para pintar la pista
+           -- Condici贸n para pintar la pista
                 if col >= 512 then
                    rojo  <= (others => '0');
                    verde <= (others => '0');
@@ -170,7 +169,7 @@ begin
                             rojo  <=(others => '1');
                             verde <=(others => '0');
                             azul  <=(others => '0');
-                        when "01" => -- L韓ea de meta (azul)
+                        when "01" => -- L铆nea de meta (azul)
                             rojo  <= (others => '0');
                             verde <= (others => '0');
                             azul  <= (others => '1');
@@ -187,24 +186,24 @@ begin
                             verde <=(others => '0');
                             azul  <=(others => '0'); -- Color por defecto
                     end case;                                                                 
-             -- Condici髇 para pintar el cuadrado en la posici髇 especificada
+             -- Condici贸n para pintar el cuadrado en la posici贸n especificada
                 if sel_pixel_fant = '1' then
                     rojo <= (others => '0');
                     verde <=(others => '1');
                     azul <= (others => '1'); -- Color celeste para el fantasma 1
                 end if;     
                                           
-            -- Condici髇 para pintar el cuadrado en la posici髇 especificada
+            -- Condici贸n para pintar el cuadrado en la posici贸n especificada
                 if sel_pixel_fant2 = '1' then
                     rojo <= (others => '1'); -- Color rosa para el fantasma 2
                     verde <=(others => '0');
                     azul <= (others => '1');
                 end if;  
                
-           -- Condici髇 para pintar el cuadrado en la posici髇 especificada
+           -- Condici贸n para pintar el cuadrado en la posici贸n especificada
               if sel_pixel_pac = '1' then
-                  rojo <= (others => '1'); -- Color amarillo para el pacman
-                  verde <=(others => '1');
+                  rojo <= (others => '0'); -- Color negro para el pacman (coche)
+                  verde <=(others => '0');
                   azul <= (others => '0');
               end if;     
                     
