@@ -188,15 +188,15 @@ begin
                     end case;                                                                 
              -- Condición para pintar el cuadrado en la posición especificada
                 if sel_pixel_fant = '1' then
-                    rojo <= (others => '0');
-                    verde <=(others => '1');
-                    azul <= (others => '1'); -- Color celeste para el fantasma 1
+                    rojo <= (others => '1');
+                    verde <=(others => '0');
+                    azul <= (others => '1'); -- Color rosa para el fantasma 1
                 end if;     
                                           
             -- Condición para pintar el cuadrado en la posición especificada
                 if sel_pixel_fant2 = '1' then
-                    rojo <= (others => '1'); -- Color rosa para el fantasma 2
-                    verde <=(others => '0');
+                    rojo <= (others => '0'); -- Color celeste para el fantasma 2
+                    verde <=(others => '1');
                     azul <= (others => '1');
                 end if;  
                
